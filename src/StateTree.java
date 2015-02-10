@@ -74,7 +74,7 @@ public class StateTree
 		{
 			
 			curNode = pQueue.poll();
-			//System.out.println("iter fscore:" + curNode.fScore + "step:" + curNode.step + "[]"  + curNode.state.toString() + curNode.state.getKey());
+			//System.out.println("iter fscore:" + curNode.fScore + "step:" + curNode.step + "[]"  + curNode.state.toString() + curNode.state.getHamHeur() + "f:" + curNode.fScore);
 			if (curNode.state.getConflicts() == 0)
 			{
 				System.out.println("found solution :" + curNode.state.toString() + "step" + curNode.step);
@@ -94,7 +94,8 @@ public class StateTree
 						//System.out.println("step over" + state.toString() + ss + ":" + state.getKey());
 						continue;
 					}
-					nn = new Node(state, ss, ss + state.getConflicts() * 2, curNode);
+					//nn = new Node(state, ss, ss + state.getConflicts() * 2, curNode);
+					nn = new Node(state, ss, ss * 2 + state.getHamHeur(), curNode);
 					closedSet.put(state.getKey(), nn);
 					pQueue.add(nn);
 				}

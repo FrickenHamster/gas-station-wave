@@ -49,7 +49,7 @@ public class Solver
 				System.out.println("Timeout");
 				System.exit(0);
 			}
-		}, 30 * 60 * 1000);
+		}, 3 * 60 * 1000);
 		
 		discoverMap = new HashMap<String, State>();
 		

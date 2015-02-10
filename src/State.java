@@ -12,6 +12,10 @@ public class State
 	private int conflicts;
 	private int[] queens;
 	private int queenNum;
+	private boolean[] conflictedPieces;
+	private boolean[] freeSpace;
+	
+	private int hamHeur;
 	
 	private ArrayList<State> successors;
 	
@@ -22,8 +26,11 @@ public class State
 		this.queens = queens;
 		this.key = "";
 		conflicts = 0;
+		conflictedPieces = new boolean[queenNum];
+		freeSpace = new boolean[queenNum * queenNum];
 		for (int i = 0; i < queenNum; i++)
 		{
+			//conflictedPieces[i] = false;
 			this.key += queens[i * 2];
 			this.key += queens[i * 2 + 1];
 			for (int j = i + 1; j < queenNum; j++)
@@ -31,9 +38,44 @@ public class State
 				if (queens[i * 2 + 1] == queens[j * 2 + 1] || Math.abs(queens[i * 2] - queens[j * 2]) == Math.abs(queens[i * 2 + 1] - queens[j * 2 + 1]))
 				{
 					conflicts++;
+					conflictedPieces[i] = true;
+					conflictedPieces[j] = true;
+				}
+			}
+			for (int j = 0; j < queenNum; j++)
+			{
+				int xx = queens[i * 2];
+				int yy = queens[i * 2 + 1];
+				freeSpace[yy * queenNum + j] = true;
+				int nyy = yy + (xx - j);
+				if (nyy >= 0 && nyy < queenNum)
+				freeSpace[nyy * queenNum + j] = true;
+				nyy = yy - (xx - j);
+				if (nyy >= 0 && nyy < queenNum)
+				freeSpace[nyy * queenNum + j] = true;
+			}
+			
+		}
+		
+		hamHeur = 0;
+		
+		for (int i = 0; i < queenNum; i++)
+		{
+			if (conflictedPieces[i])
+			{
+				for (int j = 0; j < queenNum; j++)
+				{
+					if (j != i)
+					{
+						if (freeSpace[j * queenNum + queens[i]])
+						{
+							hamHeur++;
+						}
+					}
 				}
 			}
 		}
+		
 		//System.out.println(conflicts);
 	}
 	
@@ -118,6 +160,11 @@ public class State
 			ss += Math.abs(queens[i * 2 + 1] - def[i * 2 + 1]);
 		}
 		return ss;
+	}
+	
+	public int getHamHeur()
+	{
+		return hamHeur;
 	}
 	
 	public int getConflicts()

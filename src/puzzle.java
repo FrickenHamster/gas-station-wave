@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Main
+public class puzzle
 {
 	
 	
@@ -20,8 +20,8 @@ public class Main
 			int x = scanner.nextInt();
 			queens[i * 2] = x - 1;
 			queens[i * 2 + 1] = y - 1;
-		}/*
-		int n = 4;
+		}
+		/*int n = 4;
 		int moves = 10;
 		int[] queens = new int[]{1, 3, 2, 3, 3, 1, 4, 1};
 		for (int i = 0; i < queens.length; i++)
