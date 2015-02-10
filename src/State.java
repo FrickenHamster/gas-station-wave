@@ -97,11 +97,11 @@ public class State
 					if (j == i)
 					{
 						newQueens[j * 2 + 1] = qy - 1;
-						key += (qy - 1);
+						//key += (qy - 1);
 					} else
 					{
 						newQueens[j * 2 + 1] = queens[j * 2 + 1];
-						key += queens[j * 2 + 1];
+						//key += queens[j * 2 + 1];
 					}
 				}
 				State newState  = new State(newQueens, queenNum);
@@ -118,11 +118,11 @@ public class State
 					if (j == i)
 					{
 						newQueens[j * 2 + 1] = qy + 1;
-						key += (qy - 1);
+						//key += (qy - 1);
 					} else
 					{
 						newQueens[j * 2 + 1] = queens[j * 2 + 1];
-						key += queens[j * 2 + 1];
+						//key += queens[j * 2 + 1];
 					}
 				}
 				State newState = new State(newQueens, queenNum);
@@ -134,6 +134,15 @@ public class State
 		//System.out.println(suc.size());
 		//successors = suc;
 		return suc;
+	}
+	
+	public void printResult()
+	{
+		System.out.println(conflicts + " conflicts");
+		for (int i = 0; i < queenNum; i++)
+		{
+			System.out.println(queens[i * 2 + 1] + " " + queens[i * 2]);
+		}
 	}
 
 

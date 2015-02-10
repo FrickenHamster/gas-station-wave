@@ -63,22 +63,44 @@ public class StateTree
 		this.queenNum = queenNum;
 	}
 	
-	public State search(int stepLimit)
+	public State search(int stepLimit, long startTime)
 	{
+		long endTime = startTime + 30 * 60000;
+		
+		int gcn = 10;
+		
+		int lowConf = queenNum;
+		
 		pQueue = new PriorityQueue<Node>(100, new NodeComparator());
 		HashMap<String, Boolean> openSet = new HashMap<String, Boolean>();
 		HashMap<String, Node> closedSet = new HashMap<String, Node>();
 		Node curNode = new Node(root, 0, root.getConflicts() * 2, null);
+		State lowState = root;
 		pQueue.add(curNode);
 		while(!pQueue.isEmpty())
 		{
+			if (curNode.state.getConflicts() == 0)
+				return curNode.state;
+			else if (curNode.state.getConflicts() < lowConf)
+			{
+				lowConf = curNode.state.getConflicts();
+				lowState = curNode.state;
+			}
+			
+			if (System.currentTimeMillis() > endTime)
+			{
+				System.out.println("timeout");
+				return lowState;
+			}
+			gcn--;
+			if (gcn < 0)
+			{
+				gcn = 10;
+				System.gc();
+			}
 			
 			curNode = pQueue.poll();
 			//System.out.println("iter fscore:" + curNode.fScore + "step:" + curNode.step + "[]"  + curNode.state.toString() + curNode.state.getHamHeur() + "f:" + curNode.fScore);
-			if (curNode.state.getConflicts() == 0)
-			{
-				System.out.println("found solution :" + curNode.state.toString() + "step" + curNode.step);
-			}
 			closedSet.put(curNode.state.getKey(), curNode);
 			ArrayList<State> suc = curNode.state.getSuccessors();
 			for (State state : suc)
@@ -99,20 +121,9 @@ public class StateTree
 					closedSet.put(state.getKey(), nn);
 					pQueue.add(nn);
 				}
-				else
-				ss = nn.step;
-				//System.out.println(state.toString() + "steps:" + ss);
-				
-				/*else if (nn.step > curNode.step + 1)
-				{
-					pQueue.remove(nn);
-					nn.step = curNode.step + 1;
-					nn.fScore = nn.step + nn.state.getConflicts() * 2;
-					pQueue.add(nn);
-				}*/
 			}
 		}
-		return curNode.state;
+		return lowState;
 	}
 	
 	

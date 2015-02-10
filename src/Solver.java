@@ -9,26 +9,12 @@ import java.util.*;
 public class Solver
 {
 	
-	private class Piece
-	{
-		public int x;
-		public int y;
-		public int moves;
-		
-		public Piece(int x, int y)
-		{
-			this.x = x;
-			this.y = y;
-		}
-		
-	}
 	
 	private int n;
 	private int k;
 	
 	private Timer timer;
 	
-	private Piece[] pieces;
 	private StateTree tree;
 	
 	private HashMap<String, State> discoverMap;
@@ -38,9 +24,8 @@ public class Solver
 		this.n = n;
 		this.k = k;
 		
-		pieces = new Piece[n];
 		
-		timer = new Timer();
+		/*timer = new Timer();
 		timer.schedule(new TimerTask()
 		{
 			@Override
@@ -49,23 +34,20 @@ public class Solver
 				System.out.println("Timeout");
 				System.exit(0);
 			}
-		}, 3 * 60 * 1000);
+		}, 5 * 60 * 1000);*/
 		
 		discoverMap = new HashMap<String, State>();
 		
-		//State test = new State(start, n);
+		long startTime = System.currentTimeMillis();
 
 		tree = new StateTree(start, n);
 		
-		//ArrayList<State> ss = test.getSuccessors();
+		State result = tree.search(k, startTime);
 
-		tree.search(k);
+		result.printResult();
+		System.out.println((System.currentTimeMillis() - startTime) + " seconds");
 		
 		System.exit(0);
 		
-		/*for (State s : ss)
-		{
-			System.out.println(s.toString());
-		}*/
 	}
 }
