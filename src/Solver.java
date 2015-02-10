@@ -26,6 +26,8 @@ public class Solver
 	private int n;
 	private int k;
 	
+	private Timer timer;
+	
 	private Piece[] pieces;
 	private StateTree tree;
 	
@@ -38,16 +40,28 @@ public class Solver
 		
 		pieces = new Piece[n];
 		
+		timer = new Timer();
+		timer.schedule(new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				System.out.println("Timeout");
+				System.exit(0);
+			}
+		}, 30 * 60 * 1000);
 		
 		discoverMap = new HashMap<String, State>();
 		
-		State test = new State(start, n);
+		//State test = new State(start, n);
 
-		tree = new StateTree(test);
+		tree = new StateTree(start, n);
 		
 		//ArrayList<State> ss = test.getSuccessors();
 
-		tree.search();
+		tree.search(k);
+		
+		System.exit(0);
 		
 		/*for (State s : ss)
 		{

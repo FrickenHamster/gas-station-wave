@@ -110,6 +110,16 @@ public class State
 		return ss;
 	}
 
+	public int getSteps(int[] def)
+	{
+		int ss = 0;
+		for (int i = 0; i < queenNum; i++)
+		{
+			ss += Math.abs(queens[i * 2 + 1] - def[i * 2 + 1]);
+		}
+		return ss;
+	}
+	
 	public int getConflicts()
 	{
 		return conflicts;

@@ -53,16 +53,17 @@ public class StateTree
 	
 	private State root;
 	
+	private int[] def;
+	private int queenNum;
 	
-	
-	public StateTree(State root)
+	public StateTree(int[] start, int queenNum)
 	{
-		this.root = root;
-		
-		
+		this.root = new State(start, queenNum);
+		this.def = start;
+		this.queenNum = queenNum;
 	}
 	
-	public State search()
+	public State search(int stepLimit)
 	{
 		pQueue = new PriorityQueue<Node>(100, new NodeComparator());
 		HashMap<String, Boolean> openSet = new HashMap<String, Boolean>();
@@ -73,28 +74,41 @@ public class StateTree
 		{
 			
 			curNode = pQueue.poll();
-			//System.out.println("iter fscore:" + curNode.fScore + "step:" + curNode.step + "[]"  + curNode.state.toString());
+			//System.out.println("iter fscore:" + curNode.fScore + "step:" + curNode.step + "[]"  + curNode.state.toString() + curNode.state.getKey());
 			if (curNode.state.getConflicts() == 0)
 			{
-				System.out.println("found solution :" + curNode.state.toString());
+				System.out.println("found solution :" + curNode.state.toString() + "step" + curNode.step);
 			}
 			closedSet.put(curNode.state.getKey(), curNode);
 			ArrayList<State> suc = curNode.state.getSuccessors();
 			for (State state : suc)
 			{
 				Node nn = closedSet.get(state.getKey());
+				int ss = -1;
+				//System.out.println(nn);
 				if (nn == null)
 				{
-					nn = new Node(state, curNode.step + 1, curNode.step + 1 + state.getConflicts() * 2, curNode);
+					ss = state.getSteps(def);
+					if (ss > stepLimit)
+					{
+						//System.out.println("step over" + state.toString() + ss + ":" + state.getKey());
+						continue;
+					}
+					nn = new Node(state, ss, ss + state.getConflicts() * 2, curNode);
+					closedSet.put(state.getKey(), nn);
 					pQueue.add(nn);
 				}
-				else if (nn.step > curNode.step + 1)
+				else
+				ss = nn.step;
+				//System.out.println(state.toString() + "steps:" + ss);
+				
+				/*else if (nn.step > curNode.step + 1)
 				{
 					pQueue.remove(nn);
 					nn.step = curNode.step + 1;
 					nn.fScore = nn.step + nn.state.getConflicts() * 2;
 					pQueue.add(nn);
-				}
+				}*/
 			}
 		}
 		return curNode.state;
